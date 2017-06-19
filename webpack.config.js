@@ -35,7 +35,7 @@ module.exports = {
 
   devServer: {
     contentBase: './dist', //Relative directory for base of server
-    port: 8080, //Port Number
+    port: 9191, //Port Number
     host: '0.0.0.0',
     historyApiFallback: true
   },
