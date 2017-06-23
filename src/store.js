@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import reducers from "./modules/app/combineReducers.js";
 
 window.History = createHistory();
+
 const reduxRouterMW = routerMiddleware(History);
 
 const setStore = (defaultState = {}) => {

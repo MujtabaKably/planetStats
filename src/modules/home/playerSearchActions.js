@@ -47,7 +47,7 @@ const playerSearchActions = {
   },
 
   searchTextChanged(value, serverType) {
-    const LCvalue = value.toLowerCase(value)
+    const LCvalue = value.toLowerCase()
     const requestTimeStamp = Date.now();
 
     return (dispatch) => {

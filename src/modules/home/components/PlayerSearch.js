@@ -73,21 +73,21 @@ class PlayerSearch extends React.Component {
                     </div>)
     } else {
       playerSearch.playerList.forEach((player, i) => {
-        PlayerCards.push(<PlayerCard key = {i} playerInfo={player}/>);
+        PlayerCards.push(<PlayerCard key = {i} playerInfo={player} dispatch = {this.props.dispatch}/>);
       });
       render = PlayerCards
     }
 
     return <div>
             <Paper style={ styles.paper }>
-              <TextField floatingLabelText="Player Name" fullWidth={true} style={styles.textField} value={playerSearch.searchText} onChange = {this.handleSearchChange.bind(this)}/>
+              <TextField floatingLabelText="Search Player Name" fullWidth={true} style={styles.textField} value={playerSearch.searchText} onChange = {this.handleSearchChange.bind(this)}/>
                 <RadioButtonGroup name="ServerType" style={ styles.radioButtonGroup } onChange={this.handleChange.bind(this)} valueSelected={playerSearch.serverType}> 
                   <RadioButton value="ps2:v2" label="PC" checkedIcon={<ActionFavorite style={styles.actionFavourite} />} uncheckedIcon={ <ActionFavoriteBorder /> } style={styles.radioButton} />
                   <RadioButton value="ps2ps4us" label="PS4US" style={styles.radioButton} />
                   <RadioButton value="ps2ps4eu" label="PS4EU" style={styles.radioButton} />
                 </RadioButtonGroup>
              </Paper>
-             <div className="container-fluid row" style={styles.cardDiv}>
+             <div className="row" style={styles.cardDiv}>
               {render} 
              </div>
           </div>

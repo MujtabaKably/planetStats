@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Provider } from "react-redux";
+import { Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 
 import Routes from './Routes.js';
@@ -13,7 +14,9 @@ export default class App extends React.Component {
     return <Provider store={store} >
 	       		<ConnectedRouter history={History} >
 					<Layout >
-						<Routes dispatch={this.props.store.dispatch}/>
+						<Switch>
+							<Routes/>
+						</Switch>
 					</Layout>
 		   		</ConnectedRouter>
 			 </Provider>
