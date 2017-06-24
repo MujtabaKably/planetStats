@@ -5,10 +5,22 @@ import Avatar from 'material-ui/Avatar';
 import { push } from 'react-router-redux';
 
 import _ from 'underscore';
+import PinSwitch from './PinSwitch';
+
+import playerSearchActions from '../playerSearchActions';
 
 class PlayerCard extends React.Component {
   handleCardClick() {
     this.props.dispatch(push(`/players/${this.props.playerInfo.name.first}`))
+  }
+
+  handlePinClick() {
+    const pinned = (_.pluck(this.props.playersPinned, 'character_id').indexOf(this.props.playerInfo.character_id) > -1)
+    if (pinned) {
+      this.props.dispatch(playerSearchActions.unPinPlayer(this.props.playerInfo));
+    } else {
+      this.props.dispatch(playerSearchActions.pinPlayer(this.props.playerInfo, this.props.playersPinned));
+    }
   }
 
   render() {
@@ -117,13 +129,19 @@ class PlayerCard extends React.Component {
         width: '50px',
         height: 'auto',
         backgroundColor: 'unset',
-        marginTop: '15px',
+        marginTop: '40px',
         marginLeft: '12px'
       },
 
       anchor: {
         cursor: 'pointer'
       },
+
+      pin: {
+        position: 'absolute',
+        left: '10px',
+        top: '7px'
+      }
     };
 
     // coloring based on faction colors
@@ -154,43 +172,47 @@ class PlayerCard extends React.Component {
     //fixing br 120 percent to next from 0 to 100
     const percentToNext = playerInfo.battle_rank.value == 120 ? 100 : parseFloat(playerInfo.battle_rank.percent_to_next);
 
-    return <div className="col-xs-12 col-sm-6 col-md-4" style={styles.grandParentDiv}>
+    //set PinValue
+    const pinned = (_.pluck(this.props.playersPinned, 'character_id').indexOf(playerInfo.character_id) > -1);
+
+    return <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3" style={styles.grandParentDiv}>
         <Paper style={styles.paper} rounded={true} >
           <div className="container-fluid row" style={styles.cardContainer}>
-            {/*faction icon*/}
-            <div className="col-xs-2" style={styles.cardInner1}>
+            { /*faction icon*/ }
+            <div className="col-xs-2" style={styles.cardInner1}> 
+              <PinSwitch style={styles.pin} color = { factionColors[playerInfo.faction_id].tertiary } checked={pinned} onClick={this.handlePinClick.bind(this)}/>
               <Avatar src={factionImagePath} style={styles.avatar}/>
             </div>
 
-            {/* main card body*/}
+            { /* main card body*/ }
             <div className="col-xs-10" style={styles.cardInner2}>
-              {/*player name, clickable anchor*/}
+              { /*player name, clickable anchor*/ }
               <div style={styles.parentDiv}>
                 <a style={styles.anchor} onClick={ this.handleCardClick.bind(this)}>
                   <div style={styles.cardHeader}>
-                    {playerInfo.name.first.length > 15 ? playerInfo.name.first.substring(0,15) + '...' : playerInfo.name.first }
+                    {playerInfo.name.first.length > 15 ? playerInfo.name.first.substring(0, 15) + '...' : playerInfo.name.first }
                   </div>
                 </a>
                 <div style={styles.cardSubtitle}>{factionInfo.name.en}, {worldInfo.name.en}</div>
               </div>
 
-              {/* player battle rank */}
+              { /* player battle rank */ }
               <div style={styles.brParent}>
                 <span style={styles.br}>BR </span><span style={styles.brRank}>{playerInfo.battle_rank.value}</span>
               </div>
 
-              {/* BR progress bar */}
+              { /* BR progress bar */ }
               <div style={styles.brProgressDiv}>
                 <span style={styles.brMessage}>Progress To Next Rank ( {percentToNext}% )</span>
                 <LinearProgress style={styles.progress} color={factionColors[playerInfo.faction_id].secondary} mode="determinate" value={ percentToNext}/>
               </div>
 
-              {/*certs div */}
+              { /*certs div */ }
               <div style={styles.certDiv}>
                 <span style={styles.cert}>Certs: {playerInfo.certs.available_points}</span>
               </div>
 
-              {/*KDA div*/}
+              { /*KDA div*/ }
               <div style={styles.kdaDiv}>
                 <span style={styles.kda}>KDA: {KDA}</span>
               </div>

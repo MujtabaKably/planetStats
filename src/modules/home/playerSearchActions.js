@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from "underscore";
 
 const playerSearchActions = {
   actionConstants: {
@@ -6,6 +7,14 @@ const playerSearchActions = {
     SEARCH_TEXT_CHANGED: 'SEARCH_TEXT_CHANGED',
     PLAYER_LIST_UPDATED: 'PLAYER_LIST_UPDATED',
     PLAYER_SEARCH_STATE_CHANGED: 'PLAYER_SEARCH_STATE_CHANGED',
+    PLAYER_PINNED: 'PLAYER_PINNED',
+    PLAYER_UNPINNED: 'PLAYER_UNPINNED',
+    CLEAR_PINNED_PLAYERS: 'CLEAR_PINNED_PLAYERS',
+    MINI_CARDS: 'MINI_CARDS',
+    PINNED_COUNT_EXCECEDDED: 'PINNED_COUNT_EXCECEDDED',
+    ALREADY_PINNED: 'ALREADY_PINNED',
+    PINNED_COUNT_EXCECEDDED_SETTLED: 'PINNED_COUNT_EXCECEDDED_SETTLED',
+    ALREADY_PINNED_SETTLED: 'ALREADY_PINNED_SETTLED'
   },
 
   serverTypeChanged(value, searchText) {
@@ -114,6 +123,66 @@ const playerSearchActions = {
     }
   },
 
+  pinPlayer(playerData, playersPinned) {
+    return (dispatch) => {
+      const pinned = _.pluck(playersPinned, 'character_id');
+      const index = pinned.indexOf(playerData.character_id);
+
+      if (index > -1) {
+        dispatch(this.alreadyExists())
+      } else if (pinned.length >= 3) {
+        dispatch(this.pinCountExceeded())
+      } else {
+        dispatch({
+          type: this.actionConstants.PLAYER_PINNED,
+          payload: {
+            playerData
+          }
+        });
+      }
+    }
+
+  },
+
+  unPinPlayer(playerData) {
+    return {
+      type: this.actionConstants.PLAYER_UNPINNED,
+      payload: {
+        playerData
+      }
+    }
+  },
+
+  clearPinnedPlayers() {
+    return {
+      type: this.actionConstants.CLEAR_PINNED_PLAYERS
+    }
+  },
+
+  pinCountExceeded() {
+    return {
+      type: this.actionConstants.PINNED_COUNT_EXCECEDDED,
+    }
+  },
+
+  alreadyExists() {
+    return {
+      type: this.actionConstants.ALREADY_PINNED,
+    }
+  },
+
+  settleCountExceeded() {
+    return {
+      type: this.actionConstants.PINNED_COUNT_EXCECEDDED_SETTLED,
+    }
+  },
+
+  settleAlreadyExists() {
+    return {
+      type: this.actionConstants.ALREADY_PINNED_SETTLED,
+    }
+  },
+  
   getPlayerInfo(serverType, LCvalue) {
     return axios.get(`${BaseUrl}/${BaseKey}/${BaseRequestType}/${serverType}/character/?c:limit=10&c:sort=name.first_lower&name.first_lower=^${LCvalue}&c:resolve=world,stat_history&c:show=name.first,character_id,faction_id,battle_rank,certs.available_points`)
   }

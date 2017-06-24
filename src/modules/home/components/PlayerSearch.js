@@ -67,13 +67,13 @@ class PlayerSearch extends React.Component {
                 </div>)
 
     } else if ((playerSearch.searchState == 'COMPLETE' && playerSearch.playerList.length == 0) || playerSearch.searchState == 'ERROR') {
-           render = (<div style={styles.notFoundDiv}>
+      render = (<div style={styles.notFoundDiv}>
                       <h3>Player '{playerSearch.searchText}' Not Found</h3>
                       <h5>Try Using Other Servers</h5>
                     </div>)
     } else {
       playerSearch.playerList.forEach((player, i) => {
-        PlayerCards.push(<PlayerCard key = {i} playerInfo={player} dispatch = {this.props.dispatch}/>);
+        PlayerCards.push(<PlayerCard key = {i} playerInfo={player} dispatch = {this.props.dispatch} playersPinned={this.props.playerSearch.pinnedPlayers}/>);
       });
       render = PlayerCards
     }

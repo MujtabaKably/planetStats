@@ -15,6 +15,7 @@ import Divider from 'material-ui/Divider';
 import { push } from 'react-router-redux'
 
 import appActions from '../appActions.js'
+import playerSearchActions from '../../home/playerSearchActions'
 
 class ToggleTheme extends React.Component {
   render() {
@@ -59,9 +60,9 @@ class Header extends React.Component {
 
   render() {
     return <div>
-    	<AppBar title="PlanetSide 2 Stats" onLeftIconButtonTouchTap={this.handleMenutoggle.bind(this)}/>
-    	<SideDrawer open={this.props.drawerOpen} dispatch={this.props.dispatch} theme={this.props.theme}>
-    	</SideDrawer>
+      <AppBar title="PlanetSide 2 Stats" onLeftIconButtonTouchTap={this.handleMenutoggle.bind(this)}/>
+      <SideDrawer open={this.props.drawerOpen} dispatch={this.props.dispatch} theme={this.props.theme}>
+      </SideDrawer>
     </div>
 
   }
@@ -77,8 +78,12 @@ class SideDrawer extends React.Component {
   }
 
   handleHomeClick() {
-  	this.props.dispatch(push('/'));
-  	this.props.dispatch(appActions.toggleMenu());
+    this.props.dispatch(push('/'));
+    this.props.dispatch(appActions.toggleMenu());
+  }
+
+  handleClearClick() {
+    this.props.dispatch(playerSearchActions.clearPinnedPlayers());
   }
 
   render() {
@@ -88,14 +93,15 @@ class SideDrawer extends React.Component {
     }
 
     return <Drawer open={this.props.open } docked={false} onRequestChange={this.handleMenutoggle.bind(this)}>
-    		<List>
-    			<Subheader><b>Navigate</b></Subheader>
-    			<ListItem primaryText="Home" leftIcon={<ActionHome />} onClick={this.handleHomeClick.bind(this)}/>
-    			<Divider />
-    			<Subheader><b>Settings</b></Subheader>
-    			<ListItem primaryText = {<ToggleTheme onToggle={this.handleThemeChange.bind(this)} value = {this.props.theme}/>} />
-    		</List>
-		   </Drawer>;
+        <List>
+          <Subheader><b>Navigate</b></Subheader>
+          <ListItem primaryText="Home" leftIcon={<ActionHome />} onClick={this.handleHomeClick.bind(this)}/>
+          <Divider />
+          <Subheader><b>Settings</b></Subheader>
+          <ListItem primaryText = {<ToggleTheme onToggle={this.handleThemeChange.bind(this)} value = {this.props.theme}/>} />
+          <ListItem primaryText = {<b>Clear Pinned Players</b>} onClick={this.handleClearClick.bind(this)}/>
+        </List>
+       </Drawer>;
   }
 }
 
